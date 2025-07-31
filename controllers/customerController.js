@@ -41,4 +41,24 @@ exports.addCustomer = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.getCustomers = async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    let query = `SELECT * FROM customers`;
+    let params = [];
+
+    if (email) {
+      query += ` WHERE email = ?`;
+      params.push(email);
+    }
+
+    const [customers] = await db.query(query, params);
+
+    res.status(200).json(customers);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 

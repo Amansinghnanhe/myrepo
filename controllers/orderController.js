@@ -51,3 +51,35 @@ exports.addOrder = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.getOrders = async (req, res) => {
+  try {
+    const { customer_id } = req.query;
+
+    let query = `
+      SELECT 
+        o.id AS order_id,
+        o.customer_id,
+        p.id AS product_id,
+        p.name AS product_name,
+        p.price,
+        oi.quantity
+      FROM orders o
+      JOIN order_items oi ON o.id = oi.order_id
+      JOIN products p ON oi.product_id = p.id
+    `;
+    
+    const params = [];
+
+    if (customer_id) {
+      query += ` WHERE o.customer_id = ?`;
+      params.push(customer_id);
+    }
+
+    const [orders] = await db.query(query, params);
+
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+

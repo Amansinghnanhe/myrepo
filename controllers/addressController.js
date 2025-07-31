@@ -26,4 +26,24 @@ exports.addAddress = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.getAddresses = async (req, res) => {
+  try {
+    const { customer_id } = req.query;
+
+    let query = `SELECT * FROM addresses`;
+    let params = [];
+
+    if (customer_id) {
+      query += ` WHERE customer_id = ?`;
+      params.push(customer_id);
+    }
+
+    const [addresses] = await db.query(query, params);
+
+    res.status(200).json(addresses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 

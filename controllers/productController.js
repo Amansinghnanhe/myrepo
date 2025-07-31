@@ -32,3 +32,26 @@ exports.addProduct = async (req, res) => {
     res.status(500).json({ message: 'Error adding products', error: error.message });
   }
 };
+exports.getProducts = async (req, res) => {
+  try {
+    const { name, id } = req.query;
+
+    let query = `SELECT * FROM products`;
+    const params = [];
+
+    if (id) {
+      query += ` WHERE id = ?`;
+      params.push(id);
+    } else if (name) {
+      query += ` WHERE name = ?`;
+      params.push(name);
+    }
+
+    const [products] = await db.query(query, params);
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching products', error: error.message });
+  }
+};
+
