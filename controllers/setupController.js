@@ -1,6 +1,4 @@
-const db = require('../config/db')
 const createTables = require('../models/createTables');
-
 
 exports.createAlltables = async (req, res) => {
   try {
