@@ -3,5 +3,5 @@ const router = express.Router();
 const { addCustomer, getCustomers } = require('../controllers/customerController');
 
 router.post('/', addCustomer);
-router.get('/', getCustomers );
+router.get('/', getCustomers);
 module.exports = router;
