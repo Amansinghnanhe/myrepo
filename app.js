@@ -8,7 +8,7 @@ const addressRoutes = require('./routes/addressRoutes')
 
 const app = express()
 app.use(express.json())
-app.use('/customers', customerRouts)
+app.use('/customers', customerRoutes)
 app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
 app.use('/setup', setupRoutes)
