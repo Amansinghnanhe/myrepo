@@ -46,7 +46,6 @@ exports.getAddresses = async (req, res) => {
   }
 };
 
-
 exports.updateAddress = async (req, res) => {
   try {
     const updates = Array.isArray(req.body) ? req.body : [req.body];
@@ -62,7 +61,6 @@ exports.updateAddress = async (req, res) => {
         continue;
       }
 
-      
       const [existing] = await db.query(
         `SELECT * FROM addresses WHERE id = ? AND customer_id = ?`,
         [id, customer_id]
@@ -73,7 +71,6 @@ exports.updateAddress = async (req, res) => {
         continue;
       }
 
-    
       const [duplicate] = await db.query(
         `SELECT * FROM addresses WHERE customer_id = ? AND address = ? AND id != ?`,
         [customer_id, new_address, id]
@@ -139,7 +136,6 @@ exports.deleteAddress = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 
 

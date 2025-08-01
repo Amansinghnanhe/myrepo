@@ -120,7 +120,6 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-
 exports.deleteProduct = async (req, res) => {
   try {
     const products = Array.isArray(req.body) ? req.body : [req.body];
@@ -140,7 +139,6 @@ exports.deleteProduct = async (req, res) => {
         notFound.push(id);
         continue;
       }
-
       await db.query(`DELETE FROM order_items WHERE product_id = ?`, [id]);
 
       await db.query(`DELETE FROM products WHERE id = ?`, [id]);

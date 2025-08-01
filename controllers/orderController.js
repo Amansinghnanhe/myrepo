@@ -76,9 +76,8 @@ exports.getOrders = async (req, res) => {
       query += ` WHERE o.customer_id = ?`;
       params.push(customer_id);
     }
-
+    
     const [orders] = await db.query(query, params);
-
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -76,7 +76,6 @@ exports.updateCustomer = async (req, res) => {
         continue;
       }
 
-      
       const [existing] = await db.query(`SELECT * FROM customers WHERE id = ?`, [id]);
 
       if (existing.length === 0) {
@@ -84,7 +83,6 @@ exports.updateCustomer = async (req, res) => {
         continue;
       }
 
-      
       if (email) {
         const [duplicate] = await db.query(
           `SELECT * FROM customers WHERE email = ? AND id != ?`,
@@ -96,7 +94,6 @@ exports.updateCustomer = async (req, res) => {
         }
       }
 
-      
       const fields = [];
       const values = [];
 
