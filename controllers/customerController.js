@@ -127,5 +127,39 @@ exports.updateCustomer = async (req, res) => {
   }
 };
 
+exports.deleteCustomer = async (req, res) => {
+  try {
+    const customers = Array.isArray(req.body) ? req.body : [req.body];
 
+    const deleted = [];
+    const notFound = [];
+
+    for (const customer of customers) {
+      const { email } = customer;
+
+      if (!email) {
+        return res.status(400).json({ message: "Email is required." });
+      }
+
+      const [result] = await db.query(
+        `DELETE FROM customers WHERE email = ?`,
+        [email]
+      );
+
+      if (result.affectedRows > 0) {
+        deleted.push(email);
+      } else {
+        notFound.push(email);
+      }
+    }
+
+    res.status(200).json({
+      message: "Delete operation completed",
+      deleted,
+      notFound
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 

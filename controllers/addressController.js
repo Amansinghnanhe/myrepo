@@ -46,6 +46,7 @@ exports.getAddresses = async (req, res) => {
   }
 };
 
+
 exports.updateAddress = async (req, res) => {
   try {
     const updates = Array.isArray(req.body) ? req.body : [req.body];
@@ -101,6 +102,44 @@ exports.updateAddress = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+exports.deleteAddress = async (req, res) => {
+  try {
+    const addresses = Array.isArray(req.body) ? req.body : [req.body];
+
+    const deleted = [];
+    const notFound = [];
+
+    for (const addr of addresses) {
+      const { customer_id, address } = addr;
+
+      if (!customer_id || !address) {
+        return res.status(400).json({ message: "customer_id and address are required" });
+      }
+
+      const [result] = await db.query(
+        `DELETE FROM addresses WHERE customer_id = ? AND address = ?`,
+        [customer_id, address]
+      );
+
+      if (result.affectedRows > 0) {
+        deleted.push({ customer_id, address });
+      } else {
+        notFound.push({ customer_id, address });
+      }
+    }
+
+    res.status(200).json({
+      message: "Delete operation completed",
+      deleted,
+      notFound
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 
 

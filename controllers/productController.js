@@ -121,3 +121,42 @@ exports.updateProduct = async (req, res) => {
 };
 
 
+exports.deleteProduct = async (req, res) => {
+  try {
+    const products = Array.isArray(req.body) ? req.body : [req.body];
+
+    const deleted = [];
+    const notFound = [];
+
+    for (const item of products) {
+      const { id } = item;
+
+      if (!id) {
+        return res.status(400).json({ message: "Product ID is required" });
+      }
+
+      const [existing] = await db.query(`SELECT * FROM products WHERE id = ?`, [id]);
+      if (existing.length === 0) {
+        notFound.push(id);
+        continue;
+      }
+
+      await db.query(`DELETE FROM order_items WHERE product_id = ?`, [id]);
+
+      await db.query(`DELETE FROM products WHERE id = ?`, [id]);
+
+      deleted.push(id);
+    }
+
+    res.status(200).json({
+      message: "Delete operation completed",
+      deleted,
+      notFound
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting product(s)', error: error.message });
+  }
+};
+
+
+
