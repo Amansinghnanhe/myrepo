@@ -127,36 +127,33 @@ exports.updateCustomer = async (req, res) => {
 exports.deleteCustomer = async (req, res) => {
   try {
     const customers = Array.isArray(req.body) ? req.body : [req.body];
-
-    const deleted = [];
     const notFound = [];
+    const deleted = [];
 
-    for (const customer of customers) {
-      const { email } = customer;
-
-      if (!email) {
-        return res.status(400).json({ message: "Email is required." });
+    for (const { id } of customers) {
+      if (!id) {
+        notFound.push({ error: 'Missing id' });
+        continue;
       }
 
-      const [result] = await db.query(
-        `DELETE FROM customers WHERE email = ?`,
-        [email]
-      );
+      const [result] = await db.query('DELETE FROM customers WHERE id = ?', [id]);
 
-      if (result.affectedRows > 0) {
-        deleted.push(email);
+      if (result.affectedRows === 0) {
+        notFound.push({ id, message: 'Customer not found' });
       } else {
-        notFound.push(email);
+        deleted.push({ id, message: 'Customer deleted' });
       }
     }
 
     res.status(200).json({
-      message: "Delete operation completed",
       deleted,
       notFound
     });
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
 
