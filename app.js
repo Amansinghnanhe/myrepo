@@ -6,7 +6,6 @@ const orderRoutes = require('./routes/orderRoutes')
 const setupRoutes = require('./routes/setupRoutes')
 const addressRoutes = require('./routes/addressRoutes')
 
-
 const app = express()
 app.use(express.json())
 app.use('/customers', customerRouts)
