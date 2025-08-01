@@ -1,6 +1,5 @@
 const express = require('express');
-const db = require('./config/db');
-const customerRouts = require('./routes/customerRoutes')
+const customerRoutes = require('./routes/customerRoutes')
 const productRoutes = require('./routes/productRoutes')
 const orderRoutes = require('./routes/orderRoutes')
 const setupRoutes = require('./routes/setupRoutes')
