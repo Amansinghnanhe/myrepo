@@ -6,6 +6,6 @@ const { addProduct, getProducts, updateProduct, deleteProduct } = require('../co
 router.post('/', addProduct);
 router.get('/', getProducts);
 router.put('/', updateProduct);
-router.delete('/',  deleteProduct);
+router.delete('/', deleteProduct);
 
 module.exports = router;

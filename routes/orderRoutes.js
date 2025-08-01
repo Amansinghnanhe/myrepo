@@ -6,5 +6,4 @@ router.post('/', addOrder);
 router.get('/', getOrders);
 router.put('/', updateOrder);
 
-
 module.exports = router;
