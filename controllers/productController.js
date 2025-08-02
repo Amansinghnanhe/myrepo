@@ -126,12 +126,15 @@ exports.deleteProduct = async (req, res) => {
 
     const deleted = [];
     const notFound = [];
+    const notDeleted = [];
+    const invalid = [];
 
     for (const item of products) {
       const { id } = item;
 
       if (!id) {
-        return res.status(400).json({ message: "Product ID is required" });
+        invalid.push({ item, reason: "Product ID is required" });
+        continue; 
       }
 
       const [existing] = await db.query(`SELECT * FROM products WHERE id = ?`, [id]);
@@ -139,22 +142,29 @@ exports.deleteProduct = async (req, res) => {
         notFound.push(id);
         continue;
       }
-      await db.query(`DELETE FROM order_items WHERE product_id = ?`, [id]);
+
+      const [rows] = await db.query(`SELECT * FROM order_items WHERE product_id = ?`, [id]);
+      if (rows.length > 0) {
+        notDeleted.push({ id, reason: "Product used in existing orders" });
+        continue;
+      }
 
       await db.query(`DELETE FROM products WHERE id = ?`, [id]);
-
-      deleted.push(id);
+      deleted.push({ id, message: "Product deleted" });
     }
 
     res.status(200).json({
       message: "Delete operation completed",
       deleted,
-      notFound
+      notFound,
+      notDeleted,
+      invalid
     });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting product(s)', error: error.message });
   }
 };
+
 
 
 
