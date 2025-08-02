@@ -41,7 +41,4 @@ await db.query(`
   console.log('Tables created successfully');
 }
 
-
-
-
 module.exports = createTables;
