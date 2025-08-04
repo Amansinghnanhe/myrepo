@@ -1,4 +1,5 @@
 const db = require('../config/db')
+
 exports.addOrder = async (req, res) => {
   try {
     const orders = Array.isArray(req.body) ? req.body : [req.body];  
@@ -51,6 +52,7 @@ exports.addOrder = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 exports.getOrders = async (req, res) => {
   try {
     const { customer_id } = req.query;
@@ -76,10 +78,8 @@ exports.getOrders = async (req, res) => {
     }
 
     const [orders] = await db.query(query, params);
-
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
